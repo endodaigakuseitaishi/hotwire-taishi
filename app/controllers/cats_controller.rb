@@ -3,7 +3,13 @@ class CatsController < ApplicationController
 
   # GET /cats or /cats.json
   def index
-    @cats = Cat.all
+    # @cats = Cat.page(params[:page]).per(10)
+
+    # Cat classに対してクラスオブジェクトを使う
+    @search = Cat.ransack(params[:q])
+    @search.sorts = 'id desc' if @search.sorts.empty?
+    # kaminariのpaginateをチェーンする
+    @cat = @search.result.page(params[:page])
   end
 
   # GET /cats/1 or /cats/1.json
